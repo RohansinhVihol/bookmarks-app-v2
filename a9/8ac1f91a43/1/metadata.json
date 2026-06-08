@@ -1,0 +1,48 @@
+{
+  "cli_version": "0.7.5",
+  "checkpoint_id": "a98ac1f91a43",
+  "session_id": "c988d031-d081-4651-9e1c-09583d6ebd89",
+  "strategy": "manual-commit",
+  "created_at": "2026-06-08T11:50:07.3426285Z",
+  "branch": "main",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "src/lib/supabase/server.ts",
+    "src/middleware.ts",
+    "src/proxy.ts"
+  ],
+  "agent": "Gemini CLI",
+  "model": "gemini-3-flash-preview",
+  "turn_id": "fae5381ece5c",
+  "session_metrics": {
+    "turn_count": 1
+  },
+  "initial_attribution": {
+    "calculated_at": "2026-06-08T11:50:07.3177028Z",
+    "agent_lines": 1,
+    "agent_removed": 93,
+    "human_added": 0,
+    "human_modified": 129,
+    "human_removed": 0,
+    "total_committed": 130,
+    "total_lines_changed": 223,
+    "agent_percentage": 42.152466367713004,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0
+    },
+    {
+      "checkpoint_number": 2,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 130,
+      "agent_lines_removed": 136
+    }
+  ]
+}

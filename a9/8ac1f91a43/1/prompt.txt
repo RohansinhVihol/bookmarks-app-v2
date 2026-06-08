@@ -1,0 +1,1 @@
+Rename src/middleware.ts to src/proxy.ts as per Next.js new convention and update any imports if needed
