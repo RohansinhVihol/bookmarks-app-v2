@@ -1,1 +1,6 @@
 Rename src/middleware.ts to src/proxy.ts as per Next.js new convention and update any imports if needed
+
+---
+
+git add .
+git commit -m"fix: rename middleware to proxy per Next.js convention and update middleware code"
