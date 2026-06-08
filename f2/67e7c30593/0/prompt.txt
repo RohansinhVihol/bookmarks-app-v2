@@ -1,0 +1,13 @@
+Create src/lib/email.ts that sends a welcome email using Resend:
+
+- Import Resend and initialise it with process.env.RESEND_API_KEY
+- Export an async function sendWelcomeEmail(email: string, handle: string)
+- From: 'Bookmarks <onboarding@resend.dev>'
+- Subject: 'Welcome to Bookmarks!'
+- HTML email body that:
+  - Has a heading "Welcome! 👋"
+  - Shows the user's public profile URL: NEXT_PUBLIC_SITE_URL/@handle as a clickable button
+  - Button style: #6c47ff background, white text, 8px border-radius, 12px 24px padding
+  - Short footer note about adding bookmarks from the dashboard
+
+Give me the complete TypeScript code.
