@@ -1,0 +1,15 @@
+Install dependencies:
+npm install @supabase/supabase-js @supabase/ssr resend
+
+1 Create .env.local at the project root with these variables:
+REDACTED
+REDACTED
+REDACTED
+RESEND_API_KEY=resend_api_key
+NEXT_PUBLIC_SITE_URL=http://localhost:3000
+
+2 Create .env.example with the same keys but empty values (safe to commit)
+
+3 Add .env.local to .gitignore
+
+Do only this, then confirm the dev server starts with npm run dev.
