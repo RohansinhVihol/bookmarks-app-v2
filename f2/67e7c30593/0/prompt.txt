@@ -11,3 +11,8 @@ Create src/lib/email.ts that sends a welcome email using Resend:
   - Short footer note about adding bookmarks from the dashboard
 
 Give me the complete TypeScript code.
+
+---
+
+git add .
+git commit -m "implement welcome email service with Resend"
