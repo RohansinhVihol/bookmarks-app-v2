@@ -9,3 +9,8 @@ Create src/middleware.ts for my Next.js app that:
 Add a config matcher that excludes _next/static, _next/image, favicon.ico, and files with extensions.
 
 Give me the complete TypeScript code.
+
+---
+
+git add .
+git commit -m "add supabase auth middleware with protected route redirects"
