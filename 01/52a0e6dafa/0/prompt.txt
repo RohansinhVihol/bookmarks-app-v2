@@ -1,0 +1,24 @@
+Create three Supabase client helper files for my Next.js project:
+
+1. src/lib/supabase/client.ts
+   - For browser/client components
+   - Use createBrowserClient from @supabase/ssr
+   - Reads NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY
+
+2. src/lib/supabase/server.ts
+   - For server components and API routes
+   - Use createServerClient from @supabase/ssr
+   - Read and write cookies using the cookies() helper from next/headers
+   - Implement getAll and setAll cookie methods
+
+3. src/lib/supabase/admin.ts
+   - Service role client — server-side only, bypasses RLS
+   - Use SUPABASE_SERVICE_ROLE_KEY
+   - Set autoRefreshToken: false and persistSession: false
+   - Add a comment warning never to use this in the browser
+
+Give me the complete TypeScript code for all three files.
+
+---
+
+/checkpoint save browser-server-admin-clients

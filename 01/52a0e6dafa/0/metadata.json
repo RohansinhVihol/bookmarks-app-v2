@@ -1,0 +1,73 @@
+{
+  "cli_version": "0.7.5",
+  "checkpoint_id": "0152a0e6dafa",
+  "session_id": "ea2c03a1-b0b6-4a81-b10e-de81dde2c344",
+  "strategy": "manual-commit",
+  "created_at": "2026-06-08T09:22:18.4583171Z",
+  "branch": "main",
+  "checkpoints_count": 2,
+  "files_touched": [
+    "src/lib/supabase/admin.ts",
+    "src/lib/supabase/client.ts",
+    "src/lib/supabase/server.ts"
+  ],
+  "agent": "Gemini CLI",
+  "model": "gemini-3-flash-preview",
+  "turn_id": "9d319eb9b53b",
+  "skill_events_version": 1,
+  "skill_events": [
+    {
+      "id": "prompt-skill-gemini-checkpoint-2026-06-08T08:48:15.6521088Z",
+      "event_type": "prompt_invocation",
+      "skill": {
+        "name": "checkpoint"
+      },
+      "source": {
+        "agent": "gemini",
+        "signal": "prompt_slash_command",
+        "confidence": "explicit"
+      },
+      "turn_id": "9d319eb9b53b",
+      "timestamp": "2026-06-08T08:48:15.6521088Z",
+      "native": {
+        "command": "/checkpoint"
+      },
+      "collapse": {
+        "target": "user_message",
+        "label": "/checkpoint",
+        "default_collapsed": true
+      }
+    }
+  ],
+  "session_metrics": {
+    "turn_count": 2
+  },
+  "initial_attribution": {
+    "calculated_at": "2026-06-08T09:22:18.4174364Z",
+    "agent_lines": 0,
+    "agent_removed": 0,
+    "human_added": 51,
+    "human_modified": 65,
+    "human_removed": 0,
+    "total_committed": 116,
+    "total_lines_changed": 116,
+    "agent_percentage": 0,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0
+    },
+    {
+      "checkpoint_number": 2,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0
+    }
+  ]
+}
