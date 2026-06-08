@@ -26,3 +26,8 @@ Create two files:
    - redirect('/login')
 
 Give me complete TypeScript code for both files.
+
+---
+
+git add .
+git commit -m "add auth server actions and shared app types"
