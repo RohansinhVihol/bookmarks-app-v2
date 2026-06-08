@@ -10,7 +10,7 @@ import { cookies } from 'next/headers'
  * ⚠️  Do NOT use in Client Components — use createBrowserClient() instead.
  *     Cookie writes are best-effort: they succeed in Server Actions/Route Handlers
  *     but are silently ignored in Server Components (read-only context).
- *     Ensure middleware is set up to refresh sessions in those cases.
+ *     Ensure proxy is set up to refresh sessions in those cases.
  */
 export async function createClient() {
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
@@ -38,8 +38,8 @@ export async function createClient() {
           )
         } catch {
           // Expected in Server Components — cookies() is read-only there.
-          // Session refresh is handled by middleware instead.
-          // Safe to ignore as long as middleware.ts is configured correctly.
+          // Session refresh is handled by proxy instead.
+          // Safe to ignore as long as proxy.ts is configured correctly.
         }
       },
     },
