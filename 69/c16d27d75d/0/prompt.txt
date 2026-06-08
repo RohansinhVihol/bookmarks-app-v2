@@ -1,0 +1,16 @@
+Create src/middleware.ts for my Next.js app that:
+
+1. Instantiates a Supabase client on every request using createServerClient from @supabase/ssr, reading and writing cookies correctly (getAll/setAll pattern)
+2. Calls supabase.auth.getUser() to get the current session
+3. Redirects unauthenticated users away from /dashboard/* to /login
+4. Redirects logged-in users away from /login and /signup to /dashboard
+5. Returns the supabaseResponse so session cookies are refreshed properly
+
+Add a config matcher that excludes _next/static, _next/image, favicon.ico, and files with extensions.
+
+Give me the complete TypeScript code.
+
+---
+
+git add .
+git commit -m "add supabase auth middleware with protected route redirects"
