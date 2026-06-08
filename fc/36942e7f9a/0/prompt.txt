@@ -1,0 +1,33 @@
+Create two files:
+
+1. src/lib/types.ts
+   Export two TypeScript types:
+   - Bookmark: { id, user_id, title, url: string; is_public: boolean; created_at, updated_at: string }
+   - Profile: { id, handle, created_at: string }
+
+2. src/app/auth/actions.ts  ('use server')
+   Three server actions:
+   
+   signUp(formData):
+   - Extract email, password, handle (lowercase + trim)
+   - Validate handle with /^[a-z0-9_]{3,20}$/, return error if invalid
+   - Use createAdminClient to check if handle already exists in profiles; return error if taken
+   - Call supabase.auth.signUp({ email, password })
+   - Insert a row into profiles with { id: user.id, handle } using the admin client
+   - Call sendWelcomeEmail(email, handle)
+   - revalidatePath + redirect('/dashboard')
+
+   signIn(formData):
+   - Call signInWithPassword({ email, password })
+   - Return { error } on failure, or revalidatePath + redirect('/dashboard')
+
+   signOut():
+   - Call supabase.auth.signOut()
+   - redirect('/login')
+
+Give me complete TypeScript code for both files.
+
+---
+
+git add .
+git commit -m "add auth server actions and shared app types"
