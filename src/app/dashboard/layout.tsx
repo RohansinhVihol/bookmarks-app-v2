@@ -33,8 +33,7 @@ export default async function DashboardLayout({
             <span className="text-xl font-bold text-gray-900">Bookmarks</span>
             {profile?.handle && (
               <Link
-                href={`/@${profile.handle}`}
-                target="_blank"
+                href={`/${profile.handle}`} /* Removed target="_blank" so the profile opens in the same tab instead of a new tab */
                 className="text-violet-600 hover:text-violet-700 font-medium"
               >
                 @{profile.handle}
