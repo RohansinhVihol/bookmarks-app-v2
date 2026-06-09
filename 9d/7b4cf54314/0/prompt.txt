@@ -17,3 +17,16 @@ Also export generateMetadata that returns:
 title: `${handle} — Bookmarks`
 
 Give me the complete TypeScript code.
+
+---
+
+npm run dec
+
+---
+
+npm run dev
+
+---
+
+git add .
+git commit -m "feat(profile): add public bookmark profile pages"
