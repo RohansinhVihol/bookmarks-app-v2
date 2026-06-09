@@ -71,3 +71,8 @@ export async function createClient() {
   })
 }
 --- End of content ---
+
+---
+
+git add .
+git commit -m "add server actions for bookmark CRUD"
