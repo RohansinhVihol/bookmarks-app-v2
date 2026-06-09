@@ -3,7 +3,7 @@
   "checkpoint_id": "25e53d44b2f7",
   "session_id": "b3912265-a989-4cdd-8d38-3485d3be126f",
   "strategy": "manual-commit",
-  "created_at": "2026-06-09T13:02:36.9762548Z",
+  "created_at": "2026-06-09T13:03:00.4728162Z",
   "branch": "main",
   "checkpoints_count": 1,
   "files_touched": [],
@@ -12,25 +12,5 @@
   "turn_id": "9cbe080676bc",
   "session_metrics": {
     "turn_count": 2
-  },
-  "prompt_attributions": [
-    {
-      "checkpoint_number": 1,
-      "user_lines_added": 0,
-      "user_lines_removed": 0,
-      "agent_lines_added": 0,
-      "agent_lines_removed": 0
-    },
-    {
-      "checkpoint_number": 2,
-      "user_lines_added": 90,
-      "user_lines_removed": 0,
-      "agent_lines_added": 0,
-      "agent_lines_removed": 0,
-      "user_added_per_file": {
-        "src/app/[handle]/default.tsx": 3,
-        "src/app/[handle]/page.tsx": 87
-      }
-    }
-  ]
+  }
 }
