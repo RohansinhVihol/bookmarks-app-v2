@@ -7,6 +7,7 @@ import { redirect } from 'next/navigation'
 import { AddBookmarkForm } from '@/components/AddBookmarkForm'
 import { BookmarkList } from '@/components/BookmarkList'
 
+
 export default async function DashboardPage() {
   const supabase = await createClient()
 

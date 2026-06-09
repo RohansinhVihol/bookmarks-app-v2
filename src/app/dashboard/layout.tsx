@@ -3,6 +3,8 @@ import { signOut } from '@/app/auth/actions'
 import { redirect } from 'next/navigation'
 import Link from 'next/link'
 import { ReactNode } from 'react'
+import  User  from '@/components/AllUser'
+
 
 export default async function DashboardLayout({
   children,
@@ -25,34 +27,64 @@ export default async function DashboardLayout({
     .eq('id', user.id)
     .single()
 
+  
+
+  const { data: profiles, error } = await supabase
+  .from('profiles')
+  .select('*')
+
+  console.log(profiles);
+  
+  if (error) {
+  console.log(error)
+  return
+  }
+
+
   return (
-    <div className="min-h-screen bg-gray-50">
-      <header className="bg-white border-b">
-        <div className="max-w-4xl mx-auto px-4 h-16 flex items-center justify-between">
-          <div className="flex items-center gap-4">
-            <span className="text-xl font-bold text-gray-900">Bookmarks</span>
-            {profile?.handle && (
-              <Link
-                href={`/${profile.handle}`} /* Removed target="_blank" so the profile opens in the same tab instead of a new tab */
-                className="text-violet-600 hover:text-violet-700 font-medium"
-              >
-                @{profile.handle}
-              </Link>
-            )}
-          </div>
+  <div className="min-h-screen bg-gray-50">
+    
+    <header className="bg-white border-b">
+      <div className="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
+        <div className="flex items-center gap-4">
+          <span className="text-xl font-bold text-gray-900">
+            Bookmarks
+          </span>
 
-          <form action={signOut}>
-            <button
-              type="submit"
-              className="text-sm font-medium text-gray-600 hover:text-gray-900"
+          {profile?.handle && (
+            <Link
+              href={`/${profile.handle}`}
+              className="text-violet-600 hover:text-violet-700 font-medium"
             >
-              Sign out
-            </button>
-          </form>
+              @{profile.handle}
+            </Link>
+          )}
         </div>
-      </header>
 
-      <main className="max-w-2xl mx-auto px-4 py-8">{children}</main>
+        <form action={signOut}>
+          <button
+            type="submit"
+            className="text-sm font-medium text-gray-600 hover:text-gray-900"
+          >
+            Sign out
+          </button>
+        </form>
+      </div>
+    </header>
+
+    
+    <div className="max-w-7xl mx-auto flex">
+      
+      <aside className="w-80 border-r bg-white min-h-[calc(100vh-64px)] overflow-y-auto">
+        <User profiles={profiles ?? []} />
+      </aside>
+
+      
+      <main className="flex-1 px-6 py-8">
+        {children}
+      </main>
+
     </div>
-  )
+  </div>
+)
 }
