@@ -1,0 +1,73 @@
+Create src/app/dashboard/actions.ts ('use server') with three actions:
+
+1. addBookmark(formData: FormData)
+   - Get the current user; return { error: 'Not authenticated' } if none
+   - Extract title, url, is_public (checkbox = 'on')
+   - Validate title and url are present
+   - Validate url with new URL(url) inside try/catch
+   - Insert into bookmarks table
+   - revalidatePath('/dashboard')
+   - Return { success: true } or { error }
+
+2. updateBookmark(id: string, formData: FormData)
+   - Auth check
+   - Validate url
+   - Update the row with .eq('id', id) — RLS ensures only the owner can update
+   - revalidatePath('/dashboard')
+
+3. deleteBookmark(id: string)
+   - Auth check
+   - Delete with .eq('id', id) — RLS protects this
+   - revalidatePath('/dashboard')
+
+Use createClient from @src\lib\supabase\server.ts. Give me complete TypeScript code.
+--- Content from referenced files ---
+Content from @src\lib\supabase\server.ts:
+import { createServerClient } from '@supabase/ssr'
+import { cookies } from 'next/headers'
+
+/**
+ * Creates a Supabase client for use in:
+ * - Server Components
+ * - Server Actions
+ * - Route Handlers
+ *
+ * ⚠️  Do NOT use in Client Components — use createBrowserClient() instead.
+ *     Cookie writes are best-effort: they succeed in Server Actions/Route Handlers
+ *     but are silently ignored in Server Components (read-only context).
+ *     Ensure proxy is set up to refresh sessions in those cases.
+ */
+export async function createClient() {
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
+  const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+
+  if (!supabaseUrl) {
+    throw new Error('[createClient] Missing NEXT_PUBLIC_SUPABASE_URL')
+  }
+
+  if (!supabaseAnonKey) {
+    throw new Error('[createClient] Missing NEXT_PUBLIC_SUPABASE_ANON_KEY')
+  }
+
+  const cookieStore = await cookies()
+
+  return createServerClient(supabaseUrl, supabaseAnonKey, {
+    cookies: {
+      getAll() {
+        return cookieStore.getAll()
+      },
+      setAll(cookiesToSet) {
+        try {
+          cookiesToSet.forEach(({ name, value, options }) =>
+            cookieStore.set(name, value, options)
+          )
+        } catch {
+          // Expected in Server Components — cookies() is read-only there.
+          // Session refresh is handled by proxy instead.
+          // Safe to ignore as long as proxy.ts is configured correctly.
+        }
+      },
+    },
+  })
+}
+--- End of content ---
