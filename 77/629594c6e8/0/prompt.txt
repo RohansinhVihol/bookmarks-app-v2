@@ -1,0 +1,226 @@
+Create two files:
+
+1. src/app/dashboard/layout.tsx (async server component)
+   - Fetch the current user; redirect to /login if not found
+   - Fetch the user's profile (handle) from Supabase
+   - Render a header with:
+     - Left: 'Bookmarks' text + a link to /@{handle} (opens in new tab, violet colour)
+     - Right: a sign-out button that calls the signOut server action via a form
+   - Wrap children in <main className="max-w-2xl mx-auto px-4 py-8">
+
+2. src/app/dashboard/page.tsx (async server component)
+   - Fetch the current user; redirect to /login if absent
+   - Fetch all bookmarks for this user ordered by created_at descending
+   - Render <AddBookmarkForm /> then <BookmarkList bookmarks={bookmarks ?? []} />
+
+Imports: createClient from @src\lib\supabase\server.ts, signOut from @src\app\auth\actions.ts.
+Give me complete TSX code.
+--- Content from referenced files ---
+Content from @src\app\auth\actions.ts:
+'use server'
+
+import { revalidatePath } from 'next/cache'
+import { redirect } from 'next/navigation'
+import { createClient } from '@/lib/supabase/server'
+import { createAdminClient } from '@/lib/supabase/admin'
+import { sendWelcomeEmail } from '@/lib/email'
+
+// ─── Validation ────────────────────────────────────────────────────────────────
+
+const HANDLE_REGEX = /^[a-z0-9_]{3,20}$/
+
+function validateSignUpInputs(
+  email: string,
+  password: string,
+  handle: string
+): string | null {
+  if (!email || !email.includes('@')) {
+    return 'Please enter a valid email address.'
+  }
+  if (!password || password.length < 8) {
+    return 'Password must be at least 8 characters.'
+  }
+  if (!HANDLE_REGEX.test(handle)) {
+    return 'Handle must be 3–20 characters: letters, numbers, underscores only.'
+  }
+  return null
+}
+
+// ─── Actions ───────────────────────────────────────────────────────────────────
+
+export async function signUp(formData: FormData) {
+  const email = (formData.get('email') as string)?.trim()
+  const password = formData.get('password') as string
+  const handle = (formData.get('handle') as string)?.toLowerCase().trim()
+
+  console.log('1. signUp called:', { email, handle })
+
+
+  // Validate all inputs upfront
+  const validationError = validateSignUpInputs(email, password, handle)
+  console.log('2. Validation:', validationError)
+  if (validationError) return { error: validationError }
+
+  const admin = createAdminClient()
+
+  // Check handle availability
+  // NOTE: Small race condition window exists here — handle uniqueness is
+  // ultimately enforced by a unique constraint on profiles.handle in the DB.
+  const { data: existing , error: handleError } = await admin
+    .from('profiles')
+    .select('id')
+    .eq('handle', handle)
+    .maybeSingle()   //change 
+  
+
+
+  console.log('3. Handle check:', { existing, handleError })
+
+  if (existing) {
+    return { error: 'That handle is already taken.' }
+  }
+
+  const supabase = await createClient()
+
+  // Create auth user
+  const { data, error: signUpError } = await supabase.auth.signUp({
+    email,
+    password,
+  })
+  console.log('4. Auth signUp:', { user: data?.user?.id, signUpError })
+
+  if (signUpError) return { error: signUpError.message }
+  if (!data.user) return { error: 'Failed to create account. Please try again.' }
+
+  // Create profile — if this fails, clean up the orphaned auth user
+ const { error: profileError } = await admin
+  .from('profiles')
+  .insert({ 
+    id: data.user.id, 
+    handle,
+    created_at: new Date().toISOString() // ✅ add karo
+  })
+
+  console.log('5. Profile insert:', { profileError })  
+
+  if (profileError) {
+    // Rollback: delete the auth user so they can try again cleanly
+    await admin.auth.admin.deleteUser(data.user.id)
+
+    // Unique constraint violation = handle was race-condition sniped
+    if (profileError.code === '23505') {
+      return { error: 'That handle was just taken. Please choose another.' }
+    }
+
+    return { error: 'Failed to create profile. Please try again.' }
+  }
+
+  // Send welcome email — non-fatal, don't block signup on email failure
+  try {
+    await sendWelcomeEmail(email, handle)
+  } catch (err) {
+    console.error('[signUp] Welcome email failed:', err)
+  }
+
+  // revalidatePath('/', 'layout')
+  // redirect('/dashboard')
+  revalidatePath('/', 'layout')
+  console.log('6. Redirecting to dashboard...')  // ← add karo
+  redirect('/dashboard')
+}
+
+export async function signIn(formData: FormData) {
+  const email = (formData.get('email') as string)?.trim()
+  const password = formData.get('password') as string
+
+  if (!email || !password) {
+    return { error: 'Email and password are required.' }
+  }
+
+  const supabase = await createClient()
+
+  const { error } = await supabase.auth.signInWithPassword({ email, password })
+
+  if (error) return { error: error.message }
+
+  revalidatePath('/', 'layout')
+  redirect('/dashboard')
+}
+
+export async function signOut() {
+  const supabase = await createClient()
+  await supabase.auth.signOut()
+  redirect('/login')
+}
+Content from @src\lib\supabase\server.ts:
+import { createServerClient } from '@supabase/ssr'
+import { cookies } from 'next/headers'
+
+/**
+ * Creates a Supabase client for use in:
+ * - Server Components
+ * - Server Actions
+ * - Route Handlers
+ *
+ * ⚠️  Do NOT use in Client Components — use createBrowserClient() instead.
+ *     Cookie writes are best-effort: they succeed in Server Actions/Route Handlers
+ *     but are silently ignored in Server Components (read-only context).
+ *     Ensure proxy is set up to refresh sessions in those cases.
+ */
+export async function createClient() {
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
+  const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+
+  if (!supabaseUrl) {
+    throw new Error('[createClient] Missing NEXT_PUBLIC_SUPABASE_URL')
+  }
+
+  if (!supabaseAnonKey) {
+    throw new Error('[createClient] Missing NEXT_PUBLIC_SUPABASE_ANON_KEY')
+  }
+
+  const cookieStore = await cookies()
+
+  return createServerClient(supabaseUrl, supabaseAnonKey, {
+    cookies: {
+      getAll() {
+        return cookieStore.getAll()
+      },
+      setAll(cookiesToSet) {
+        try {
+          cookiesToSet.forEach(({ name, value, options }) =>
+            cookieStore.set(name, value, options)
+          )
+        } catch {
+          // Expected in Server Components — cookies() is read-only there.
+          // Session refresh is handled by proxy instead.
+          // Safe to ignore as long as proxy.ts is configured correctly.
+        }
+      },
+    },
+  })
+}
+--- End of content ---
+
+---
+
+Create three client-side React components:
+
+1. src/components/AddBookmarkForm.tsx ('use client')
+   - Form: title text input, URL input (type="url"), 'Make public' checkbox (name="is_public")
+   - On submit: calls addBookmark action, shows loading state, resets form on success, shows error on failure
+   - Wrapped in a white card with a violet submit button
+
+2. src/components/BookmarkList.tsx ('use client')
+   - Props: bookmarks: Bookmark[]
+   - If empty: centred grey placeholder text
+   - Otherwise: renders a BookmarkCard for each bookmark
+
+3. src/components/BookmarkCard.tsx ('use client')
+   - Props: bookmark: Bookmark
+   - Default view: title as an external link, truncated URL, 'Public' green badge if is_public, Edit and Delete buttons
+   - Edit mode: inline form pre-filled with current values, Save and Cancel buttons
+   - Delete: shows confirm() dialog, calls deleteBookmark
+   - Update: calls updateBookmark(bookmark.id, formData), closes edit mode on success
+
+Give me complete TSX code for all three files.
