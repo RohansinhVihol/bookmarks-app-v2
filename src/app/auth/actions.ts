@@ -34,8 +34,12 @@ export async function signUp(formData: FormData) {
   const password = formData.get('password') as string
   const handle = (formData.get('handle') as string)?.toLowerCase().trim()
 
+  console.log('1. signUp called:', { email, handle })
+
+
   // Validate all inputs upfront
   const validationError = validateSignUpInputs(email, password, handle)
+  console.log('2. Validation:', validationError)
   if (validationError) return { error: validationError }
 
   const admin = createAdminClient()
@@ -43,11 +47,15 @@ export async function signUp(formData: FormData) {
   // Check handle availability
   // NOTE: Small race condition window exists here — handle uniqueness is
   // ultimately enforced by a unique constraint on profiles.handle in the DB.
-  const { data: existing } = await admin
+  const { data: existing , error: handleError } = await admin
     .from('profiles')
     .select('id')
     .eq('handle', handle)
-    .single()
+    .maybeSingle()   //change 
+  
+
+
+  console.log('3. Handle check:', { existing, handleError })
 
   if (existing) {
     return { error: 'That handle is already taken.' }
@@ -60,14 +68,21 @@ export async function signUp(formData: FormData) {
     email,
     password,
   })
+  console.log('4. Auth signUp:', { user: data?.user?.id, signUpError })
 
   if (signUpError) return { error: signUpError.message }
   if (!data.user) return { error: 'Failed to create account. Please try again.' }
 
   // Create profile — if this fails, clean up the orphaned auth user
-  const { error: profileError } = await admin
-    .from('profiles')
-    .insert({ id: data.user.id, handle })
+ const { error: profileError } = await admin
+  .from('profiles')
+  .insert({ 
+    id: data.user.id, 
+    handle,
+    created_at: new Date().toISOString() // ✅ add karo
+  })
+
+  console.log('5. Profile insert:', { profileError })  
 
   if (profileError) {
     // Rollback: delete the auth user so they can try again cleanly
@@ -88,7 +103,10 @@ export async function signUp(formData: FormData) {
     console.error('[signUp] Welcome email failed:', err)
   }
 
+  // revalidatePath('/', 'layout')
+  // redirect('/dashboard')
   revalidatePath('/', 'layout')
+  console.log('6. Redirecting to dashboard...')  // ← add karo
   redirect('/dashboard')
 }
 

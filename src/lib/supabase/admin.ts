@@ -1,4 +1,5 @@
 import { createClient } from '@supabase/supabase-js'
+import { log } from 'console'
 
 /**
  * Creates a Supabase admin client with service role privileges.
@@ -10,6 +11,10 @@ import { createClient } from '@supabase/supabase-js'
 export function createAdminClient() {
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
   const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY
+
+  
+  
+  
 
   if (!supabaseUrl) {
     throw new Error('[createAdminClient] Missing NEXT_PUBLIC_SUPABASE_URL')
