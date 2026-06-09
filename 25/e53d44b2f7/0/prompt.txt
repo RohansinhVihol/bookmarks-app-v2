@@ -1,0 +1,19 @@
+Create src/app/@[handle]/page.tsx.
+
+IMPORTANT: The folder must literally be named "@[handle]" — the @ is a real character in the folder name, not a Next.js convention.
+
+The page should:
+- Be an async server component that receives params.handle
+- Use createAdminClient (to bypass RLS)
+- Strip any leading '@' from the handle, lowercase it
+- Query the profiles table for that handle; call notFound() if missing
+- Query bookmarks where user_id = profile.id AND is_public = true, ordered by created_at descending
+- Render:
+  - h1: @{handle}
+  - Subtitle: "{n} public bookmark(s)"
+  - If none: a 'No public bookmarks yet.' message
+  - Otherwise: a list of cards, each a full-width <a> that opens the URL in a new tab, showing title + truncated URL, with a hover violet border
+
+Also export generateMetadata that returns title: `@${handle} — Bookmarks`.
+
+Give me the complete TypeScript code.
