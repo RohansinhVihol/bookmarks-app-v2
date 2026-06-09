@@ -224,3 +224,16 @@ Create three client-side React components:
    - Update: calls updateBookmark(bookmark.id, formData), closes edit mode on success
 
 Give me complete TSX code for all three files.
+
+---
+
+npm run dev
+
+---
+
+npm run dev
+
+---
+
+git add .
+git commit -m "feat(bookmarks): build authenticated dashboard with bookmark CRUD UI"
