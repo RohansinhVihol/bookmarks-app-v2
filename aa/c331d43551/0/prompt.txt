@@ -1,0 +1,24 @@
+Create four files for my Next.js bookmarks app:
+
+1. src/app/layout.tsx
+   - Root layout, Inter font from next/font/google
+   - body: bg-gray-50 min-h-screen
+   - Metadata: title 'Bookmarks', description 'Your personal bookmark collection'
+
+2. src/app/page.tsx
+   - Centred home page
+   - h1 'Bookmarks', subtext tagline
+   - Two buttons: 'Get started' → /signup (violet-600 filled), 'Log in' → /login (outlined)
+
+3. src/app/signup/page.tsx ('use client')
+   - Form fields: email, password (minLength 8), @handle (pattern [a-zA-Z0-9_]{3,20})
+   - Handle field shows '@' as a prefix inside the input
+   - Calls signUp action, handles loading + error states
+   - Link to /login at the bottom
+
+4. src/app/login/page.tsx ('use client')
+   - Form fields: email, password
+   - Calls signIn action, handles loading + error states
+   - Link to /signup at the bottom
+
+All pages use Tailwind CSS with violet-600 as the primary colour. Give me complete TSX code.
