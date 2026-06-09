@@ -1,13 +1,9 @@
 'use client'
 
-import { Bookmark } from '@/lib/types'
+import type { Bookmark } from '@/lib/types'
 import { BookmarkCard } from './BookmarkCard'
 
-interface BookmarkListProps {
-  bookmarks: Bookmark[]
-}
-
-export function BookmarkList({ bookmarks }: BookmarkListProps) {
+export function BookmarkList({ bookmarks }: { bookmarks: Bookmark[] }) {
   if (bookmarks.length === 0) {
     return (
       <div className="py-12 text-center">
@@ -18,6 +14,9 @@ export function BookmarkList({ bookmarks }: BookmarkListProps) {
 
   return (
     <div className="space-y-4">
+      <h2 className="font-semibold text-gray-900">
+        Your bookmarks ({bookmarks.length})  {/* count = useful */}
+      </h2>
       {bookmarks.map((bookmark) => (
         <BookmarkCard key={bookmark.id} bookmark={bookmark} />
       ))}
