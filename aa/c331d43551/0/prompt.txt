@@ -22,3 +22,8 @@ Create four files for my Next.js bookmarks app:
    - Link to /signup at the bottom
 
 All pages use Tailwind CSS with violet-600 as the primary colour. Give me complete TSX code.
+
+---
+
+git add .
+git commit -m "feat: add root layout and authentication pages"
