@@ -24,3 +24,19 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+body {
+  background: linear-gradient(to bottom right, #f5f3ff, #ffffff);
+  color: #111827;
+  font-family: system-ui, -apple-system, sans-serif;
+}
+
+/* smooth button hover feel */
+a {
+  transition: all 0.2s ease-in-out;
+}
+
+/* optional card feel for center content */
+main {
+  backdrop-filter: blur(6px);
+}
