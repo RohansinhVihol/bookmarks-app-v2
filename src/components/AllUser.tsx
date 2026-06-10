@@ -16,7 +16,7 @@ export default function User({ profiles }: UserProps) {
   const router = useRouter()
 
   const onclickHandler = (name: string) => {
-    router.push(`/${name}`)
+    router.push(`/@${name}`)
   }
 
   return (

@@ -48,7 +48,7 @@ export default async function DashboardLayout({
 
           {profile?.handle && (
             <Link
-              href={`/${profile.handle}`}
+              href={`/@${profile.handle}`}
               className="text-violet-600 hover:text-violet-700 font-medium"
             >
               @{profile.handle}

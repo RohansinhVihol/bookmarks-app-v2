@@ -35,6 +35,10 @@ export async function middleware(request: NextRequest) {
     return supabaseResponse
   }
 
+
+ 
+
+
   // WARNING: Do not add any logic between createServerClient and getUser().
   // Doing so risks breaking session refresh and causing random logouts.
   const supabase = createServerClient(supabaseUrl, supabaseAnonKey, {
@@ -55,6 +59,22 @@ export async function middleware(request: NextRequest) {
   })
 
   const { data: { user }, error } = await supabase.auth.getUser()
+
+   // /@rohan ko /rohan pe redirect karo internally
+ // /@rohan ko /rohan pe redirect karo internally
+if (pathname.startsWith('/@')) {
+  const handle = pathname.slice(2)
+  const targetUrl = new URL(`/${handle}`, request.url)
+
+  // Pehle auth check karo
+  if (!user) {
+    const loginUrl = new URL('/login', request.url)
+    loginUrl.searchParams.set('next', targetUrl.pathname)
+    return copyAuthCookies(supabaseResponse, NextResponse.redirect(loginUrl))
+  }
+
+  return NextResponse.rewrite(targetUrl)
+  }
 
   // On auth error, block protected routes — fail safe
   if (error && isProtected(pathname)) {
@@ -87,5 +107,5 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/((?!_next/static|_next/image|favicon.ico|[a-zA-Z0-9]+\\.[a-zA-Z]+$).*)'],
+  matcher: ['/((?!_next/static|_next/image|favicon.ico|[a-zA-Z0-9]+\\.[a-zA-Z]+$).*)','/@:path*'],
 }
