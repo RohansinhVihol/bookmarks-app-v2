@@ -33,12 +33,6 @@ export default async function DashboardLayout({
   .from('profiles')
   .select('*')
 
-  console.log(profiles);
-  
-  if (error) {
-  console.log(error)
-  return
-  }
 
 
   return (
