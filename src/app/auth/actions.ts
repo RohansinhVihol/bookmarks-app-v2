@@ -4,7 +4,8 @@ import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 import { createAdminClient } from '@/lib/supabase/admin'
-import { sendWelcomeEmail } from '@/lib/email'
+//import { sendWelcomeEmail } from '@/lib/email'
+import { sendWelcomeEmailSMTP } from '@/lib/email-smtp'
 
 // ─── Validation ────────────────────────────────────────────────────────────────
 
@@ -97,16 +98,19 @@ export async function signUp(formData: FormData) {
   }
 
   // Send welcome email — non-fatal, don't block signup on email failure
+  // Send welcome email
+  console.log('7. Sending welcome email to:', email)
   try {
-    await sendWelcomeEmail(email, handle)
-  } catch (err) {
-    console.error('[signUp] Welcome email failed:', err)
+    const result = await sendWelcomeEmailSMTP(email, handle)
+    console.log('8. Email result:', result)
+  }   catch (err) {
+  console.error('[signUp] Welcome email failed:', err)
   }
 
   // revalidatePath('/', 'layout')
   // redirect('/dashboard')
   revalidatePath('/', 'layout')
-  console.log('6. Redirecting to dashboard...')  // ← add karo
+  console.log('6. Redirecting to dashboard...') 
   redirect('/dashboard')
 }
 
