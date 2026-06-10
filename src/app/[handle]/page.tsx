@@ -43,7 +43,7 @@ export default async function PublicHandlePage({ params }: PageProps) {
   const bookmarkCount = bookmarks?.length || 0
 
   return (
-    <main className="min-h-screen bg-gradient-to-br from-violet-50 via-white to-purple-50 py-12 px-4">
+    <main className="min-h-screen bg-linear-to-br from-violet-50 via-white to-purple-50 py-12 px-4">
       
       {/* Profile Header */}
       <div className="max-w-2xl mx-auto mb-10">
