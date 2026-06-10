@@ -4,6 +4,14 @@ import { NextResponse, type NextRequest } from 'next/server'
 const PROTECTED_PREFIX = '/dashboard'
 const AUTH_ROUTES = ['/login', '/signup']
 
+function isProtected(pathname: string): boolean {
+  if (AUTH_ROUTES.includes(pathname)) return false  // login/signup skip
+  return (
+    pathname.startsWith(PROTECTED_PREFIX) ||
+    /^\/[^/]+$/.test(pathname)  // /[username] pattern match karta hai
+  )
+}
+
 /** Copies refreshed Supabase auth cookies onto any redirect response. */
 function copyAuthCookies(
   from: NextResponse,
@@ -15,7 +23,7 @@ function copyAuthCookies(
   return to
 }
 
-export async function proxy(request: NextRequest) {
+export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl
   let supabaseResponse = NextResponse.next({ request })
 
@@ -49,15 +57,14 @@ export async function proxy(request: NextRequest) {
   const { data: { user }, error } = await supabase.auth.getUser()
 
   // On auth error, block protected routes — fail safe
-  if (error && pathname.startsWith(PROTECTED_PREFIX)) {
-    console.error('[proxy] Auth error:', error.message)
+  if (error && isProtected(pathname)) {
+    console.error('[middleware] Auth error:', error.message)
     const loginUrl = new URL('/login', request.url)
     loginUrl.searchParams.set('next', pathname)
     return copyAuthCookies(supabaseResponse, NextResponse.redirect(loginUrl))
   }
 
-  // Redirect unauthenticated users to /login, preserving destination
-  if (!user && pathname.startsWith(PROTECTED_PREFIX)) {
+  if (!user && isProtected(pathname)) {
     const loginUrl = new URL('/login', request.url)
     loginUrl.searchParams.set('next', pathname)
     return copyAuthCookies(supabaseResponse, NextResponse.redirect(loginUrl))
