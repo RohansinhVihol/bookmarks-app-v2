@@ -4,6 +4,7 @@ import { redirect } from 'next/navigation'
 import Link from 'next/link'
 import { ReactNode } from 'react'
 import  User  from '@/components/AllUser'
+import SidebarToggle from '@/components/SidebarToggle'
 
 
 export default async function DashboardLayout({
@@ -66,19 +67,22 @@ export default async function DashboardLayout({
       </div>
     </header>
 
-    
     <div className="max-w-7xl mx-auto flex">
-      
-      <aside className="w-80 border-r bg-white min-h-[calc(100vh-64px)] overflow-y-auto">
-        <User profiles={profiles ?? []} />
-      </aside>
 
-      
-      <main className="flex-1 px-6 py-8">
-        {children}
-      </main>
+  {/* DESKTOP SIDEBAR (always visible) */}
+  <aside className="hidden md:block w-80 border-r bg-white min-h-[calc(100vh-64px)] overflow-y-auto">
+    <User profiles={profiles ?? []} />
+  </aside>
 
-    </div>
+  {/* MOBILE SIDEBAR (toggle) */}
+  <SidebarToggle profiles={profiles ?? []} />
+
+  {/* MAIN CONTENT */}
+  <main className="flex-1 px-6 py-8">
+    {children}
+  </main>
+
+</div>
   </div>
 )
 }
