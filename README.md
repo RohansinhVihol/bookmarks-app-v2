@@ -17,7 +17,7 @@ Production-ready bookmarks platform featurin Row Level Security, dual email prov
 ## 🌐 Live Project Links
 
 🚀 **Live App**
-https://bookmarks-app-v2-384t.vercel.app
+https://bookmarks-app-v2.vercel.app
 
 🐙 **GitHub Repo**
 https://github.com/RohansinhVihol/bookmarks-app-v2
