@@ -4,7 +4,7 @@ A modern Full-Stack personal bookmark manager with public profiles. Save your fa
 
 ---
 
-![Next.js](https://img.shields.io/badge/Next.js_14-000000?style=for-the-badge&logo=nextdotjs&logoColor=white)
+![Next.js](https://img.shields.io/badge/Next.js_16-000000?style=for-the-badge&logo=nextdotjs&logoColor=white)
 ![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=typescript&logoColor=white)
 ![Supabase](https://img.shields.io/badge/Supabase-3ECF8E?style=for-the-badge&logo=supabase&logoColor=white)
 ![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-06B6D4?style=for-the-badge&logo=tailwindcss&logoColor=white)
@@ -17,10 +17,10 @@ Production-ready bookmarks platform featurin Row Level Security, dual email prov
 ## 🌐 Live Project Links
 
 🚀 **Live App**
-https://your-app.vercel.app
+https://bookmarks-app-v2-384t.vercel.app
 
 🐙 **GitHub Repo**
-https://github.com/yourusername/bookmarks-app
+https://github.com/RohansinhVihol/bookmarks-app-v2
 
 ---
 
@@ -59,7 +59,7 @@ https://github.com/yourusername/bookmarks-app
 ## 🧑‍💻 Tech Stack
 
 **Frontend:**
-- Next.js 14 (App Router)
+- Next.js 16 (App Router)
 - TypeScript
 - Tailwind CSS
 
@@ -93,7 +93,7 @@ bookmarks-app/
 │   │   │   ├── layout.tsx            # Protected layout
 │   │   │   ├── page.tsx              # Bookmark dashboard
 │   │   │   └── actions.ts            # CRUD server actions
-│   │   └── @[handle]/page.tsx        # Public profile page
+│   │   └── [handle]/page.tsx        # Public profile page
 │   ├── components/
 │   │   ├── AddBookmarkForm.tsx
 │   │   ├── BookmarkList.tsx
