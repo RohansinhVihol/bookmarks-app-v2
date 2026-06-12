@@ -244,10 +244,17 @@ Open [http://localhost:3000](http://localhost:3000)
 **1. RLS enabled but never activated**
 The agent wrote RLS policies but forgot `alter table ... enable row level security`, so they were silently ignored. Caught by testing a second account via direct API call — it returned another user's bookmarks. Fixed by adding the enable statements to the schema.
 
-**2. Admin client misused**
+**2. Hidden handle_new_user trigger causing duplicate key on signup**
+The agent's server action inserted a row into profiles after `auth.signUp()`, unaware that Supabase already had an auto-generated trigger `(handle_new_user)` that fires on auth.users insert and creates a profiles row itself, using the email prefix as the handle. Both inserts targeted the same primary key, causing Postgres `error 23505` (duplicate key on profiles_pkey). The profiles table appeared empty in the Table Editor only because RLS was hiding the existing row. Fixed by `removing the redundant` trigger so only the app's insert creates the profile row
+
+**3. /@handle URL conflicting with Next.js parallel route syntax**
+The agent wanted public profile URLs to look like `/@myname` for branding, but naming a route folder `@[handle]` made Next.js treat `@` as a parallel route slot, which requires a `default.js` and caused build errors. Renaming the folder to `[handle]` fixed the build, but then the URL became `/handle (no @)`, losing the desired branding.
+Fixed by keeping the route folder as a normal dynamic route `/[handle] (no @)`, and adding a middleware rewrite: requests to `/@handle` are internally rewritten to `/handle` without a redirect — so the browser still shows `/@myname`, but Next.js actually renders `[handle]/page.tsx`. This avoids both the parallel-route build error and any visible URL change.
+
+**4. Admin client misused**
 The agent used `createAdminClient()` inside the public profile server component and passed it into a client component. Refactored to keep all admin calls server-side and pass only serialised data to the UI.
 
-**3. Resend free tier not accounted for**
+**5. Resend free tier not accounted for**
 The agent used Resend as the sole email provider without knowing it can't deliver to arbitrary users on the free tier. Discovered this when sign-up emails silently failed for test accounts. Added `email-smtp.ts` as a Gmail SMTP fallback using `SMTP_USER` and `SMTP_PASS`.
 
 ---
