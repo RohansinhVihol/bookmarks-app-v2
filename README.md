@@ -33,9 +33,6 @@ https://github.com/RohansinhVihol/bookmarks-app-v2
 - Toggle bookmarks between public and private
 - Claim a unique `@handle` for their public profile
 
-**Anyone (no login) can:**
-- Visit `/@handle` and see that user's public bookmarks
-
 ---
 
 ## 🚀 Features
